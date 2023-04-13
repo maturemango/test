@@ -35,7 +35,7 @@ func main() {
 
 	r.POST("/post", postPicture)
 
-	r.Run(":8080")
+	r.Run(":8090")
 
 }
 
