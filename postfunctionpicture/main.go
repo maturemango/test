@@ -101,7 +101,6 @@ func getDataByUrl(url string) (img image.Image, err error) {
 		_ = Body.Close()
 	}(res.Body)
 
-	// 读取获取的[]byte数据
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		err = fmt.Errorf("读取数据失败,err:%s", err.Error())
@@ -115,7 +114,6 @@ func getDataByUrl(url string) (img image.Image, err error) {
 		return
 	}
 
-	// []byte 转 io.Reader
 	reader := bytes.NewReader(data)
 
 	if strings.HasSuffix(url, ".png") {
