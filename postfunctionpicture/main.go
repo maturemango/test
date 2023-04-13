@@ -41,17 +41,17 @@ func main() {
 
 func newpicture(name string, lox int, loy int, loz int, lon int) *image.RGBA {
 
-	templateFile, err := os.Open("D:\\project\\image\\d1ec268fd02b4800918c45e36fcfa3cf.png")
+	picture, err := os.Open("./image/d1ec268fd02b4800918c45e36fcfa3cf.png")
 	if err != nil {
 		panic(err)
 	}
-	defer templateFile.Close()
-	templateFileImage, err := png.Decode(templateFile)
+	defer picture.Close()
+	picturefile, err := png.Decode(picture)
 	if err != nil {
 		panic(err)
 	}
-	newTemplateImage := image.NewRGBA(templateFileImage.Bounds())
-	draw.Draw(newTemplateImage, templateFileImage.Bounds(), templateFileImage, templateFileImage.Bounds().Min, draw.Over)
+	newpicture := image.NewRGBA(picturefile.Bounds())
+	draw.Draw(newpicture, picturefile.Bounds(), picturefile, picturefile.Bounds().Min, draw.Over)
 
 	fontkai, err := loadFont("./ttf/simkai.ttf")
 	if err != nil {
@@ -59,8 +59,8 @@ func newpicture(name string, lox int, loy int, loz int, lon int) *image.RGBA {
 	}
 
 	content := freetype.NewContext()
-	content.SetClip(newTemplateImage.Bounds())
-	content.SetDst(newTemplateImage)
+	content.SetClip(newpicture.Bounds())
+	content.SetDst(newpicture)
 	content.SetSrc(image.Black)
 	content.SetDPI(72)
 	content.SetFontSize(42)
@@ -72,8 +72,8 @@ func newpicture(name string, lox int, loy int, loz int, lon int) *image.RGBA {
 		fmt.Println("根据地址获取图片失败,err:", err.Error())
 	}
 	imageData = resize.Resize(387, 183, imageData, resize.Lanczos3)
-	draw.Draw(newTemplateImage, newTemplateImage.Bounds().Add(image.Pt(lox, loy)), imageData, imageData.Bounds().Min, draw.Over)
-	return newTemplateImage
+	draw.Draw(newpicture, imageData.Bounds().Add(image.Pt(lox, loy)), imageData, imageData.Bounds().Min, draw.Over)
+	return newpicture
 }
 
 func loadFont(path string) (font *truetype.Font, err error) {
@@ -138,8 +138,8 @@ type Picturemessage struct {
 func postPicture(c *gin.Context) {
 	json := Picturemessage{}
 	c.BindJSON(&json)
-	pic := newpicture(json.Name, json.X, json.Y, json.Z, json.N)
-	err := png.Encode(c.Writer, pic)
+	picture := newpicture(json.Name, json.X, json.Y, json.Z, json.N)
+	err := png.Encode(c.Writer, picture)
 	if err != nil {
 		fmt.Println(err)
 		c.AbortWithError(400, err)
